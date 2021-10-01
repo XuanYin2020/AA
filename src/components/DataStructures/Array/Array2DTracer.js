@@ -50,8 +50,10 @@ class Array2DTracer extends Tracer {
     this.data[x][y].patched++;
   }
 
+
   depatch(x, y) {
     this.data[x][y].patched--;
+
   }
 
   // used to highlight sorted elements
@@ -60,7 +62,7 @@ class Array2DTracer extends Tracer {
     this.data[x][y].sorted = true;
   }
 
-  select(sx, sy, ex = sx, ey = sy) {
+  select(sx, sy, ex = sx, ey = sy, c = '0') { // Color blue
     for (let x = sx; x <= ex; x++) {
       for (let y = sy; y <= ey; y++) {
         this.data[x][y].selected++;
@@ -78,18 +80,19 @@ class Array2DTracer extends Tracer {
     }
   }
 
-  selectRow(x, sy, ey) {
-    this.select(x, sy, x, ey);
+  selectRow(x, sy, ey, c = '0') {
+    this.select(x, sy, x, ey, c);
   }
 
-  selectCol(y, sx, ex) {
-    this.select(sx, y, ex, y);
+  selectCol(y, sx, ex, c = '0') {
+    this.select(sx, y, ex, y, c);
   }
 
   deselect(sx, sy, ex = sx, ey = sy) {
     for (let x = sx; x <= ex; x++) {
       for (let y = sy; y <= ey; y++) {
         this.data[x][y].selected--;
+
         this.data[x][y].style = undefined;
       }
     }
