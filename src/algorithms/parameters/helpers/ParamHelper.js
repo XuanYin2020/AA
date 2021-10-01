@@ -3,6 +3,7 @@ import React from 'react';
 import Denque from 'denque';
 import ParamMsg from './ParamMsg';
 
+
 export const commaSeparatedNumberListValidCheck = (t) => {
   const regex = /^[0-9]+(,[0-9]+)*$/g;
   return t.match(regex);
@@ -37,11 +38,15 @@ export const genRandNumList = (num, min, max) => {
   return list;
 };
 
+/**
+ *
+ * @param {string} type algorithm type
+ */
 export const successParamMsg = (type) => (
   <ParamMsg
     logWarning={false}
-    logTag=""
-    logMsg=""
+    logTag="Great success!"
+    logMsg={`The ${type} algorithm is now ready for execution.`}
   />
 );
 
@@ -73,7 +78,7 @@ export const makeColumnArray = (len) => {
   const arr = [];
   for (let i = 0; i < len; i += 1) {
     arr.push({
-      Header: i + 1,
+      Header: i,
       accessor: `col${i}`, // accessor is the "key" in the data,
     });
   }
@@ -84,9 +89,6 @@ export const makeColumnArray = (len) => {
  * Populate the data cells, see React-Table API
  * https://react-table.tanstack.com/docs/quick-start
  * @param {number} len size of the matrix
- * @param min
- * @param max
- * @param symmetric
  * @return array of object
  */
 export const makeData = (len, min, max, symmetric) => {
@@ -106,8 +108,7 @@ export const makeData = (len, min, max, symmetric) => {
       rows.push(row);
     }
   }
-  // const arr = [];
-  let arr = [];
+  const arr = [];
   for (let i = 0; i < len; i += 1) {
     const data = {};
     for (let j = 0; j < len; j += 1) {
@@ -116,34 +117,6 @@ export const makeData = (len, min, max, symmetric) => {
         : `${getRandomInt(min, max)}`;
     }
     arr.push(data);
-  }
-  if (len === 4) {
-    arr = [
-      {
-        col0: '0',
-        col1: '0',
-        col2: '0',
-        col3: '1',
-      },
-      {
-        col0: '1',
-        col1: '0',
-        col2: '0',
-        col3: '1',
-      },
-      {
-        col0: '1',
-        col1: '1',
-        col2: '0',
-        col3: '0',
-      },
-      {
-        col0: '0',
-        col1: '0',
-        col2: '1',
-        col3: '0',
-      },
-    ];
   }
   return arr;
 };

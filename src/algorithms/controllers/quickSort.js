@@ -73,21 +73,11 @@ export default {
         do {
           j -= 1;
         } while (i <= j && pivot < a[j]);
-        
         chunker.add(8, (vis, prev, curr) => {
           unhighlight(vis, prev, false);
           if (curr >= left) highlight(vis, curr, false);
         }, [tmp, j]);
-
-        chunker.add(9, (vis, i1, j1) => {
-          if (i1 >= 0) {
-            vis.array.assignVariable('i', i1);
-          }
-          if (j1 >= 0) {
-            vis.array.assignVariable('j', j1);
-          }
-        }, [i, j]);
-
+        chunker.add(9);
         if (i < j) {
           tmp = a[j];
           a[j] = a[i];
@@ -105,6 +95,7 @@ export default {
       }, [i, j, right]);
       return [i, a]; // Return [pivot location, array values]
     }
+
 
     function QuickSort(array, left, right) {
       let a = array;
@@ -129,11 +120,6 @@ export default {
       },
       [nodes],
     );
-    const result = QuickSort(nodes, 0, nodes.length - 1, `0/${nodes.length - 1}`);
-    chunker.add(50, (vis) => {
-      // Put in done state
-      vis.array.clearVariables();
-    });
-    return result;
+    return QuickSort(nodes, 0, nodes.length - 1, `0/${nodes.length - 1}`);
   },
 };

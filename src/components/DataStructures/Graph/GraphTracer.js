@@ -15,13 +15,6 @@
 import Tracer from '../common/Tracer';
 import { distance } from '../common/util';
 import GraphRenderer from './GraphRenderer/index';
-import { cloneDeepWith } from 'lodash';
-
-export class Element {
-  constructor() {
-    this.variables = [];
-  }
-}
 
 class GraphTracer extends Tracer {
   getRendererClass() {
@@ -31,10 +24,10 @@ class GraphTracer extends Tracer {
   init() {
     super.init();
     this.dimensions = {
-      baseWidth: 480,
-      baseHeight: 480,
+      baseWidth: 320,
+      baseHeight: 320,
       padding: 32,
-      nodeRadius: 20,
+      nodeRadius: 15,
       arrowGap: 4,
       nodeWeightGap: 4,
       edgeWeightGap: 4,
@@ -45,6 +38,7 @@ class GraphTracer extends Tracer {
     this.text = null;
     this.logTracer = null;
   }
+
 
   /**
    * This is the original function provided by Tracer.js,
@@ -193,19 +187,13 @@ class GraphTracer extends Tracer {
     this.isWeighted = isWeighted;
   }
 
-  addNode(id, value = undefined, shape = 'circle', color = 'blue', weight = null,
-    x = 0, y = 0, visitedCount = 0, selectedCount = 0, visitedCount1 = 0,
-    isPointer = 0, pointerText = '') {
+  addNode(id, value = undefined, shape = 'circle', color = 'blue', weight = null, x = 0, y = 0, visitedCount = 0, selectedCount = 0) {
     if (this.findNode(id)) return;
     value = (value === undefined ? id : value);
-    const key = id;
-    // eslint-disable-next-line max-len
-    this.nodes.push({ id, value, shape, color, weight, x, y, visitedCount, selectedCount, key, visitedCount1, isPointer, pointerText });
+    const key = id; // the key is a unique id which stays with the value (rather than the node)
+    // so to assist with animation of swapping nodes (see swapNodes)
+    this.nodes.push({ id, value, shape, color, weight, x, y, visitedCount, selectedCount, key });
     this.layout();
-  }
-
-  addResult(text, id) {
-    this.findNode(id).Result = text;
   }
 
   updateNode(id, value, weight, x, y, visitedCount, selectedCount) {
@@ -225,9 +213,9 @@ class GraphTracer extends Tracer {
     this.layout();
   }
 
-  addEdge(source, target, weight = null, visitedCount = 0, selectedCount = 0, visitedCount1 = 0) {
+  addEdge(source, target, weight = null, visitedCount = 0, selectedCount = 0) {
     if (this.findEdge(source, target)) return;
-    this.edges.push({ source, target, weight, visitedCount, selectedCount, visitedCount1 });
+    this.edges.push({ source, target, weight, visitedCount, selectedCount });
     this.layout();
   }
 
@@ -303,16 +291,17 @@ class GraphTracer extends Tracer {
   layoutCircle() {
     this.callLayout = { method: this.layoutCircle, args: arguments };
     const rect = this.getRect();
-    const unitAngle = (2 * Math.PI) / this.nodes.length;
+    const unitAngle = 2 * Math.PI / this.nodes.length;
     let angle = -Math.PI / 2;
     for (const node of this.nodes) {
-      const x = (Math.cos(angle) * rect.width) / 2;
-      const y = (Math.sin(angle) * rect.height) / 2;
+      const x = Math.cos(angle) * rect.width / 2;
+      const y = Math.sin(angle) * rect.height / 2;
       node.x = x;
       node.y = y;
       angle += unitAngle;
     }
   }
+
 
   shift(space = 0, nodes) {
     const searchString = nodes[0];
@@ -399,8 +388,6 @@ class GraphTracer extends Tracer {
     recursiveAnalyze(root, 0);
 
     // Calculates node's x and y.
-    const hGap = rect.width / leafCounts[root];
-    const vGap = rect.height / maxDepth;
     marked = {};
     // horizontal size allocated per leaf node under a subtree node
     const leafNodeSizeAlloc = this.dimensions.baseWidth / this.nodes.length;
@@ -408,8 +395,6 @@ class GraphTracer extends Tracer {
     const verticalGap = (this.dimensions.baseHeight - 100) / maxDepth;
     const recursivePosition = (node, h, v, x, y) => {
       marked[node.id] = true;
-      // node.x = rect.left + (h + leafCounts[node.id] / 2) * hGap;
-      // node.y = rect.top + v * vGap;
       node.x = x;
       node.y = y;
       const linkedNodes = this.findLinkedNodes(node.id, false);
@@ -423,7 +408,7 @@ class GraphTracer extends Tracer {
           x1 -= leafCounts[node.id] * leafNodeSizeAlloc;
         }
         // For right child
-        if (linkedNode.id === 2 * node.id + 1) {
+        if (linkedNode.id === (2 * node.id + 1)) {
           x1 += leafCounts[node.id] * leafNodeSizeAlloc;
         }
         y1 += verticalGap;
@@ -503,6 +488,7 @@ class GraphTracer extends Tracer {
     recursivePosition(rootNode, 0, 0);
   }
 
+
   layoutRandom() {
     this.callLayout = { method: this.layoutRandom, args: arguments };
     const rect = this.getRect();
@@ -524,17 +510,11 @@ class GraphTracer extends Tracer {
     this.visitOrLeave(false, target, source, weight);
   }
 
-  allLeave(target, sources, weight) {
-    for (let i = 0; i < sources.length; i += 1) {
-      this.visitOrLeave(false, target, sources[i], weight);
-    }
-  }
-
   visitOrLeave(visit, target, source = null, weight) {
     const edge = this.findEdge(source, target);
     if (edge) edge.visitedCount += visit ? 1 : -1;
     const node = this.findNode(target);
-    if (weight) node.weight = weight;
+    if (weight !== undefined) node.weight = weight;
     node.visitedCount += visit ? 1 : -1;
     if (this.logTracer) {
       this.logTracer.println(visit ? (source || '') + ' -> ' + target : (source || '') + ' <- ' + target);
@@ -549,57 +529,19 @@ class GraphTracer extends Tracer {
     this.styledSelectOrDeselect(style, true, target, source);
   }
 
-  styledDeselect(style, target, source) {
-    this.styledSelectOrDeselect(style, false, target, source);
-  }
-
   deselect(target, source) {
     this.selectOrDeselect(false, target, source);
   }
 
-  visit1(target, source, colorIndex, weight) {
-    this.visitOrLeave1(true, target, source, weight, colorIndex);
+  styledDeselect(style, target, source) {
+    this.styledSelectOrDeselect(style, false, target, source);
   }
 
-  leave1(target, source, colorIndex, weight) {
-    this.visitOrLeave1(false, target, source, weight, colorIndex);
-  }
-
-  visitOrLeave1(visit, target, source = null, weight = null, colorIndex = 1) {
+  resetSelect(target, source) {
     const edge = this.findEdge(source, target);
-    if (edge) edge.visitedCount1 = visit ? colorIndex : 0;
+    if (edge) edge.selectedCount = 0;
     const node = this.findNode(target);
-    if (weight) node.weight = weight;
-    node.visitedCount1 = visit ? colorIndex : 0;
-    const node1 = this.findNode(source);
-    if (node1) node1.visitedCount1 = visit ? colorIndex : 0;
-    if (this.logTracer) {
-      this.logTracer.println(visit ? (source || '') + ' -> ' + target : (source || '') + ' <- ' + target);
-    }
-  }
-
-  setPointerNode(source, sText, target = null, tText = null) {
-    const node1 = this.findNode(source);
-    node1.isPointer = 1;
-    if (!node1.pointerText.includes(sText)) {
-      node1.pointerText = node1.pointerText.concat(' ', sText);
-    }
-    const node2 = this.findNode(target);
-    if (node2) {
-      node2.isPointer = 1;
-      if (!node2.pointerText.includes(tText)) {
-        node2.pointerText = node2.pointerText.concat(' ', tText);
-      }
-    }
-  }
-
-  unsetPointerNode(source, sText, target = null, tText = null) {
-    const node1 = this.findNode(source);
-    node1.pointerText = node1.pointerText.replace(sText, '');
-    const node2 = this.findNode(target);
-    if (node2) {
-      node2.pointerText = node2.pointerText.replace(tText, '');
-    }
+    node.selectedCount = 0;
   }
 
   selectOrDeselect(select, target, source = null) {
@@ -624,20 +566,12 @@ class GraphTracer extends Tracer {
     node.style = style;
   }
 
-  resetSelect(target, source) {
-    const edge = this.findEdge(source, target);
-    if (edge) edge.selectedCount = 0;
-    const node = this.findNode(target);
-    node.selectedCount = 0;
-  }
-
   log(key) {
     this.logTracer = key ? this.getObject(key) : null;
   }
 
   setText(text) {
     this.text = text;
-    this.text.push({ text });
   }
 }
 

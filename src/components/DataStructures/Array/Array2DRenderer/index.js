@@ -21,13 +21,14 @@
 
 import React from 'react';
 // import Array1DRenderer from '../Array1DRenderer/index';
+import { motion, AnimateSharedLayout } from 'framer-motion';
 import Renderer from '../../common/Renderer/index';
 import styles from './Array2DRenderer.module.scss';
 import { classes } from '../../common/util';
 import { mode } from '../../../top/Settings';
 
 let modename;
-export function switchmode(modetype = mode()) {
+function switchmode(modetype = mode()) {
   switch (modetype) {
     case 1:
       modename = styles.array_2d_green;
@@ -51,51 +52,45 @@ class Array2DRenderer extends Renderer {
 
   renderData() {
     const { data, algo } = this.props.data;
-
     const isArray1D = true;
     // const isArray1D = this instanceof Array1DRenderer;
-    let longestRow = data.reduce((longestRow, row) => longestRow.length < row.length ? row : longestRow, []);
+    let longestRow = data.reduce((longestRow, row) => (longestRow.length < row.length ? row : longestRow), []);
+    let largestColumnValue = data[0].reduce((acc, curr) => (acc < curr.value ? curr.value : acc), 0);
+    let scaleY = ((largest, columnValue) => (columnValue / largest) * 150).bind(null, largestColumnValue);
+    if (!this.props.data.arrayItemMagnitudes) {
+      scaleY = () => 0;
+    }
+
     return (
-      <table className={switchmode(mode())}
-             style={{ marginLeft: -this.centerX * 2, marginTop: -this.centerY * 2, transform: `scale(${this.zoom})` }}>
+      <motion.table
+      animate={{ scale: this.zoom }}
+        className={switchmode(mode())}
+        style={{
+          marginLeft: -this.centerX * 2,
+          borderCollapse: 'separate',
+          display: 'block',
+        }}
+      >
         <tbody>
-        <tr className={styles.row}>
-          {
-            !isArray1D &&
-            <td className={classes(styles.col, styles.index)} />
-          }
-          {
-            algo === 'tc' && // Leave a blank cell at the first row
-            <td />
-          }
-          {
-            longestRow.map((_, i) => {
+          {/* Indexes */}
+          <tr className={styles.row}>
+            {!isArray1D && <td className={classes(styles.col, styles.index)} />}
+            {longestRow.map((_, i) => {
               // if the graph instance is heapsort, then the array index starts from 1
-              if (algo === 'tc') {
+              if (algo === 'heapsort') {
                 i += 1;
               }
-              if (algo === 'prim') {
-                i = ' ';
-              }
               return (
-                <th className={classes(styles.col, styles.index)} key={i}>
-                  <span className={styles.value}>{ i }</span>
-                </th>
+                <td className={classes(styles.col, styles.index)} key={i}>
+                  <span className={styles.value}>{i}</span>
+                </td>
               );
-            })
-          }
-        </tr>
-        {
-          data.map((row, i) => (
+            })}
+          </tr>
+          {/* Values */}
+          {data.map((row, i) => (
             <tr className={styles.row} key={i}>
-              {
-                algo === 'tc' && // generate vertical index, which starts from 1
-                <th className={classes(styles.col, styles.index)} key={i}>
-                  <span className={styles.value}>{ i + 1 }</span>
-                </th>
-              }
-              {
-                !isArray1D && algo !== 'tc' &&
+              {!isArray1D && (
                 <td className={classes(styles.col, styles.index)}>
                   <span className={styles.value}>{i}</span>
                 </td>
@@ -142,11 +137,36 @@ class Array2DRenderer extends Renderer {
                 </motion.td>
               ))}
             </tr>
-          ))
-        }
+          ))}
+          {/* Variable pointers */}
+          {data.map(
+            (row, i) => isArray1D && ( // variable pointer only working for 1D arrays
+                <AnimateSharedLayout>
+                  <tr layout className={styles.row} key={i}>
+                    {row.map((col) => (
+                      <td
+                        className={classes(styles.col, styles.variables)}
+                        key={`vars-${col.key}`}
+                      >
+                        {col.variables.map((v) => (
+                          <motion.p
+                            layoutId={v}
+                            key={v}
+                            className={styles.variable}
+                          >
+                            {v}
+                          </motion.p>
+                        ))}
+                      </td>
+                    ))}
+                  </tr>
+                </AnimateSharedLayout>
+            ),
+          )}
         </tbody>
-      </table>
+      </motion.table>
     );
   }
 }
+
 export default Array2DRenderer;

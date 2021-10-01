@@ -122,15 +122,8 @@ $dragBarWidth: 10px;
 // Left Dragbar
 #leftdragbar {
 	grid-area: leftdragbar;
+	cursor: col-resize;
 
-}
-
-#leftdraghandle {
-	position: absolute;
-	height: 20px;
-	width: 20px;
-	margin: auto;
-	filter: brightness(110%);
 }
 
 // Bottom Dragbar
@@ -139,7 +132,6 @@ $dragBarWidth: 10px;
 	cursor: row-resize;
 
 }
-
 
 
 

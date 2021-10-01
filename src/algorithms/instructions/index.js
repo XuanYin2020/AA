@@ -69,4 +69,3 @@ export const QSInstruction = sortInstructions;
 export const TCInstruction = graphInstructions;
 export const PrimsInstruction = graphInstructions;
 export const BFSSInstruction = stringInstructions;
-export const HSSInstruction = stringInstructions;

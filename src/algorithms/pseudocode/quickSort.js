@@ -48,7 +48,6 @@ Quicksort(A, left, right) \\B 1
                 pivot, which is in A[i].
         \\Expl}
     \\In}
-    // Done \\B 50
 \\Code}
 
 \\Code{

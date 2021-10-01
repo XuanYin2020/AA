@@ -33,24 +33,6 @@ function switchmode(modetype = mode()) {
   return modename;
 }
 
-function switchColor(visitedCount1) {
-  let fillStyle = '';
-  switch (visitedCount1) {
-    case 1:
-      fillStyle = styles.visited1;
-      break;
-    case 2:
-      fillStyle = styles.visited2;
-      break;
-    case 3:
-      fillStyle = styles.visited;
-      break;
-    default:
-      break;
-  }
-  return fillStyle;
-}
-
 class GraphRenderer extends Renderer {
   constructor(props) {
     super(props);
@@ -67,7 +49,9 @@ class GraphRenderer extends Renderer {
     const coords = this.computeCoords(e);
     const { nodes, dimensions } = this.props.data;
     const { nodeRadius } = dimensions;
-    this.selectedNode = nodes.find(node => distance(coords, node) <= nodeRadius);
+    this.selectedNode = nodes.find(
+      (node) => distance(coords, node) <= nodeRadius,
+    );
   }
 
   handleMouseMove(e) {
@@ -92,8 +76,23 @@ class GraphRenderer extends Renderer {
   }
 
   renderData() {
-    const { nodes, edges, isDirected, isWeighted, dimensions, text } = this.props.data;
-    const { baseWidth, baseHeight, nodeRadius, arrowGap, nodeWeightGap, edgeWeightGap } = dimensions;
+    const {
+      nodes,
+      edges,
+      isDirected,
+      isWeighted,
+      dimensions,
+      text,
+    } = this.props.data;
+
+    const {
+      baseWidth,
+      baseHeight,
+      nodeRadius,
+      arrowGap,
+      nodeWeightGap,
+      edgeWeightGap,
+    } = dimensions;
     const viewBox = [
       (this.centerX - baseWidth / 2) / this.zoom,
       (this.centerY - baseHeight / 2) / this.zoom,
@@ -108,27 +107,59 @@ class GraphRenderer extends Renderer {
       rootY = root.y;
     }
     return (
-      <svg className={switchmode(mode())} viewBox={viewBox} ref={this.elementRef}>
+      <svg
+        className={switchmode(mode())}
+        viewBox={viewBox}
+        ref={this.elementRef}
+      >
         <defs>
-          <marker id="markerArrow" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto">
+          <marker
+            id="markerArrow"
+            markerWidth="4"
+            markerHeight="4"
+            refX="2"
+            refY="2"
+            orient="auto"
+          >
             <path d="M0,0 L0,4 L4,2 L0,0" className={styles.arrow} />
           </marker>
-          <marker id="markerArrowSelected" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto">
-            <path d="M0,0 L0,4 L4,2 L0,0" className={classes(styles.arrow, styles.selected)} />
+          <marker
+            id="markerArrowSelected"
+            markerWidth="4"
+            markerHeight="4"
+            refX="2"
+            refY="2"
+            orient="auto"
+          >
+            <path
+              d="M0,0 L0,4 L4,2 L0,0"
+              className={classes(styles.arrow, styles.selected)}
+            />
           </marker>
-          <marker id="markerArrowVisited" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto">
-            <path d="M0,0 L0,4 L4,2 L0,0" className={classes(styles.arrow, styles.visited)} />
-          </marker>
-          <marker id="markerArrowVisited1" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto">
-            <path d="M0,0 L0,4 L4,2 L0,0" className={classes(styles.arrow, styles.visited1)} />
-          </marker>
-          <marker id="markerArrowVisited2" markerWidth="4" markerHeight="4" refX="2" refY="2" orient="auto">
-            <path d="M0,0 L0,4 L4,2 L0,0" className={classes(styles.arrow, styles.visited2)} />
+          <marker
+            id="markerArrowVisited"
+            markerWidth="4"
+            markerHeight="4"
+            refX="2"
+            refY="2"
+            orient="auto"
+          >
+            <path
+              d="M0,0 L0,4 L4,2 L0,0"
+              className={classes(styles.arrow, styles.visited)}
+            />
           </marker>
         </defs>
-        {
-          edges.sort((a, b) => a.visitedCount - b.visitedCount + a.visitedCount1 - b.visitedCount1).map(edge => {
-            const { source, target, weight, visitedCount, selectedCount, visitedCount1 } = edge;
+        {edges
+          .sort((a, b) => a.visitedCount - b.visitedCount)
+          .map((edge) => {
+            const {
+              source,
+              target,
+              weight,
+              visitedCount,
+              selectedCount,
+            } = edge;
             const sourceNode = this.props.data.findNode(source);
             const targetNode = this.props.data.findNode(target);
             if (!sourceNode || !targetNode) return undefined;
@@ -153,54 +184,81 @@ class GraphRenderer extends Renderer {
                   styles.edge,
                   targetNode.sorted && styles.sorted,
                   selectedCount && styles.selected,
-                  !selectedCount && visitedCount && styles.visited,
-                  switchColor(visitedCount1),
+                  visitedCount && styles.visited,
                 )}
                 key={`${source}-${target}`}
               >
-                <path d={`M${sx},${sy} L${ex},${ey}`} className={classes(styles.line, isDirected && styles.directed)} />
-                {
-                  isWeighted &&
+                <path
+                  d={`M${sx},${sy} L${ex},${ey}`}
+                  className={classes(
+                    styles.line,
+                    isDirected && styles.directed,
+                  )}
+                />
+                {isWeighted && (
                   <g transform={`translate(${mx},${my})`}>
-                    <text className={styles.weight} transform={`rotate(${degree})`}
-                          y={-edgeWeightGap}>{this.toString(weight)}</text>
+                    <text
+                      className={styles.weight}
+                      transform={`rotate(${degree})`}
+                      y={-edgeWeightGap}
+                    >
+                      {this.toString(weight)}
+                    </text>
                   </g>
-                }
+                )}
               </g>
             );
-          })
-        }
-        {/* node graph */}
+          })}
         {nodes.map((node) => {
-          const { x, y, weight, visitedCount, visitedCount1, selectedCount, value, key, style, sorted, isPointer, pointerText  } = node;
+          const { x, y, weight, visitedCount, selectedCount, value, key, style, sorted } = node;
           // only when selectedCount is 1, then highlight the node
-          const selectNode = selectedCount === 1;
-          const visitedNode = visitedCount === 1;
+          const selectNode = selectedCount === 1; const
+            visitedNode = visitedCount === 1;
           return (
             <motion.g
-                animate={{ x, y }}
-                initial={false}
-                transition={{ duration: 1 }}
-                className={classes(styles.node, selectNode && styles.selected, sorted && styles.sorted, visitedNode && styles.visited, switchColor(visitedCount1))}
-                key={key}
+              animate={{ x, y }}
+              initial={false}
+              transition={{ duration: 1 }}
+              className={classes(
+                styles.node,
+                selectNode && styles.selected,
+                sorted && styles.sorted,
+                visitedNode && styles.visited,
+              )}
+              key={key}
+              // transform={`translate(${x},${y})`}
             >
-              <circle className={classes(styles.circle, style && style.backgroundStyle)} r={nodeRadius} />
-              <text className={classes(styles.id, style && style.textStyle)}>{value}</text>
-              {
-                isWeighted && (
-                  <text className={styles.weight} x={nodeRadius + nodeWeightGap}>
-                    {this.toString(weight)}
-                  </text>
-                )
-              }
-              {
-                  isPointer &&
-                  <text className={styles.weight} x={nodeRadius + nodeWeightGap}>{this.toString(pointerText)}</text>
-                }
+              <circle
+                className={classes(
+                  styles.circle,
+                  style && style.backgroundStyle,
+                )}
+                r={nodeRadius}
+              />
+              <text
+                className={classes(
+                  styles.id,
+                  style && style.textStyle,
+                )}
+              >
+                {value}
+              </text>
+              {isWeighted && (
+                <text className={styles.weight} x={nodeRadius + nodeWeightGap}>
+                  {this.toString(weight)}
+                </text>
+              )}
             </motion.g>
           );
         })}
-        <text style={{ fill: '#ff0000' }} textAnchor="middle" x={rootX} y={rootY - 20}>{text}</text>
+        <text
+          style={{ fill: '#ff0000' }}
+          textAnchor="middle"
+          x={rootX}
+          y={rootY - 20}
+        >
+          {text}
+        </text>
       </svg>
     );
   }
