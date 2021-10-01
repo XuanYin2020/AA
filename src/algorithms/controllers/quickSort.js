@@ -48,25 +48,48 @@ export default {
       const pivot = a[right];
       chunker.add(5, (vis, index) => {
         highlight(vis, index);
+        vis.array.assignVariable('p', index);
       }, [right]);
       let i = left - 1;
       chunker.add(11, (vis, index) => {
         highlight(vis, index, false);
+        vis.array.assignVariable('i', index);
       }, [i + 1]);
       let j = right;
       chunker.add(12, (vis, index) => {
         highlight(vis, index, false);
+        vis.array.assignVariable('j', index);
       }, [j - 1]);
+      // chunker.add(6, (vis, p, i1, j1) => {
+      //   vis.array.assignVariable('p', p);
+      //   if (i1 >= 0) {
+      //     vis.array.assignVariable('i', i1);
+      //   }
+      //   if (j1 >= 0) {
+      //     vis.array.assignVariable('j', j1);
+      //   }
+      // }, [right, i, j]);
+      // // chunker.add(6);
       while (i < j) {
         chunker.add(6);
         if (i < left) tmp = i + 1;
         else tmp = i;
+        // chunker.add(7, (vis, i1, j1) => {
+        //   if (i1 >= 0) {
+        //     vis.array.assignVariable('i', i1);
+        //   }
+        //   if (j1 >= 0) {
+        //     vis.array.assignVariable('j', j1);
+        //   }
+        // }, [i, j]);
+        // // chunker.add(7);
         do {
           i += 1;
         } while (a[i] < pivot);
         chunker.add(7, (vis, prev, curr) => {
           unhighlight(vis, prev, false);
           highlight(vis, curr, false);
+          vis.array.assignVariable('i', curr);
         }, [tmp, i]);
         if (j === right) tmp = j - 1;
         else tmp = j;
@@ -75,8 +98,19 @@ export default {
         } while (i <= j && pivot < a[j]);
         chunker.add(8, (vis, prev, curr) => {
           unhighlight(vis, prev, false);
-          if (curr >= left) highlight(vis, curr, false);
+          if (curr >= left) {
+            highlight(vis, curr, false);
+            vis.array.assignVariable('j', curr);
+          }
         }, [tmp, j]);
+        // chunker.add(9, (vis, i1, j1) => {
+        //   if (i1 >= 0) {
+        //     vis.array.assignVariable('i', i1);
+        //   }
+        //   if (j1 >= 0) {
+        //     vis.array.assignVariable('j', j1);
+        //   }
+        // }, [i, j]);
         chunker.add(9);
         if (i < j) {
           tmp = a[j];
@@ -95,7 +129,6 @@ export default {
       }, [i, j, right]);
       return [i, a]; // Return [pivot location, array values]
     }
-
 
     function QuickSort(array, left, right) {
       let a = array;
@@ -120,6 +153,11 @@ export default {
       },
       [nodes],
     );
-    return QuickSort(nodes, 0, nodes.length - 1, `0/${nodes.length - 1}`);
+    const result = QuickSort(nodes, 0, nodes.length - 1, `0/${nodes.length - 1}`);
+    chunker.add(50, (vis) => {
+      // Put in done state
+      vis.array.clearVariables();
+    });
+    return result;
   },
 };
