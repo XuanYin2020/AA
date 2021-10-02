@@ -57,7 +57,6 @@ class Array2DRenderer extends Renderer {
     // const isArray1D = this instanceof Array1DRenderer;
     let longestRow = data.reduce((longestRow, row) => longestRow.length < row.length ? row : longestRow, []);
 
-
     return (
       <table className={switchmode(mode())}
              style={{ marginLeft: -this.centerX * 2, marginTop: -this.centerY * 2, transform: `scale(${this.zoom})` }}>
@@ -87,6 +86,7 @@ class Array2DRenderer extends Renderer {
         {
           data.map((row, i) => (
             <tr className={styles.row} key={i}>
+
               {
                 !isArray1D &&
                 <td className={classes(styles.col, styles.index)}>
@@ -99,6 +99,22 @@ class Array2DRenderer extends Renderer {
                       key={j}>
                     <span className={styles.value}>{this.toString(col.value)}</span>
                   </td>
+                ))
+              }
+            </tr>
+          ))
+        }
+        {
+          algo === 'prim' &&
+          data.map((row, i) => (
+            i === 2 &&
+            <tr className={styles.row} key={i}>
+              {
+                row.map((col, j) => (
+                  <td className={classes(styles.col, styles.index)} key={j}>
+                    {col.selected && <span className={styles.value}>Min</span>}
+                  </td>
+
                 ))
               }
             </tr>
