@@ -86,15 +86,22 @@ class Array1DRenderer extends Array2DRenderer {
           );
         })}
         </div>
+
         {/* Values */}
         {data.map((row, i) => (
                 <div className={styles.row} key={i} style={{display: 'flex', alignItems: 'flex-end', justifyContent: 'center'}}>
+                  
             {!isArray1D && (
                     <div className={classes(styles.col, styles.index)}>
+                      
                     <span className={styles.value}>{i}</span>
+                    
                     </div>
             )}
+            
             {row.map((col) => (
+            <div>
+              {col.variables.includes('p') && <hr style={{position: 'relative', top: '10px', width: '300px'}}/>}
             <motion.div
                 layout
                 transition={{ duration: 0.6 }}
@@ -102,6 +109,7 @@ class Array1DRenderer extends Array2DRenderer {
                   height: `${this.toString(scaleY(col.value))}vh`,
                   display: 'flex',
                 }}
+                
 
                 /* eslint-disable-next-line react/jsx-props-no-multi-spaces */
                 className={classes(
@@ -113,15 +121,20 @@ class Array1DRenderer extends Array2DRenderer {
                 )}
                 key={col.key}
             >
+              
                <motion.span layout="position" className={classes(
                  styles.value,
                  col.style && col.style.textStyle,
                )}>
                 {this.toString(col.value)}
                 </motion.span>
+                
 
             </motion.div>
+            </div>
+            
             ))}
+            
         </div>
         ))}
         {/* Variable pointers */}
