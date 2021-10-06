@@ -3,8 +3,22 @@
 .array_1d {
     flex-shrink: 0;
 
+
+
     .row {
         margin-bottom: m#{i}n(8px, 1vh);
+        position: relative;
+
+        .pivotLine {
+            position: 'absolute';
+            width: '100%';
+            background-color: var(--array-2d-row-col-bg-selected);
+            opacity: 0.5;
+            height: m#{i}n('1.5px', '1vh');
+            margin-right: '4px';
+            z-index: 1;
+        }
+
 
         .col {
             justify-content: center;

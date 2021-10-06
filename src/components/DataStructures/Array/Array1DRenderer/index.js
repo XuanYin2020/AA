@@ -26,6 +26,7 @@ import Array2DRenderer, { } from '../Array2DRenderer/index';
 import styles from './Array1DRenderer.module.scss';
 import { classes } from '../../common/util';
 import { mode } from '../../../top/Settings';
+import { max } from 'lodash';
 
 
 let modename;
@@ -98,10 +99,19 @@ class Array1DRenderer extends Array2DRenderer {
                     
                     </div>
             )}
-            
+            {row.filter((col) => col.variables.includes('p')).map((col)=><div style={{
+                position: 'absolute', 
+                width: '100%',
+                backgroundColor: 
+                'orange',
+                opacity: 0.5,
+                height: '1.5px',
+                marginRight: '4px',
+                paddingRight: '0px',
+                zIndex: 1,
+                bottom: `max(20px,${this.toString(scaleY(col.value))}vh)`}}></div>)}
             {row.map((col) => (
             <div>
-              {col.variables.includes('p') && <hr style={{position: 'relative', top: '10px', width: '300px'}}/>}
             <motion.div
                 layout
                 transition={{ duration: 0.6 }}
@@ -121,6 +131,7 @@ class Array1DRenderer extends Array2DRenderer {
                 )}
                 key={col.key}
             >
+
               
                <motion.span layout="position" className={classes(
                  styles.value,
