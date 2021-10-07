@@ -24,7 +24,7 @@ class ArrayGraphTracer extends Tracer {
   init() {
     super.init();
     this.dimensions = {
-      baseWidth: 320,
+      baseWidth: 400,
       baseHeight: 320,
       padding: 32,
       nodeRadius: 12,

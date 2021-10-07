@@ -18,12 +18,12 @@
           display: table-cell;
           text-align: center;
           background-color: var(--array-graph-row-col-bg);
-          border: thin solid var(--array-graph-row-col-border);
+          border: 2px solid var(--array-graph-row-col-border);
           padding: 0 4px;
           font-size: 8px;
     
           .value {
-            font-size: 9px;
+            font-size: 16px;
             color: var(--array-graph-row-col-value-color);
 
           }
