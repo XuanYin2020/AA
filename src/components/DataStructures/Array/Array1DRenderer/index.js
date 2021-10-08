@@ -55,8 +55,7 @@ class Array1DRenderer extends Array2DRenderer {
   renderData() {
     const { data, algo } = this.props.data;
 
-    const isArray1D = true;
-    const arrayMagnitudeScaleValue = 20; // value to scale an array e.g. so that the maximum item is 150px tall
+    const arrayMagnitudeScaleValue = 17; // value to scale an array e.g. so that the maximum item is 150px tall
 
     let longestRow = data.reduce((longestRow, row) => longestRow.length < row.length ? row : longestRow, []);
 
@@ -66,19 +65,16 @@ class Array1DRenderer extends Array2DRenderer {
       scaleY = () => 0;
     }
     return (
+      <div style={{overflow: "hidden", width: "100%", height: "100%"}}>
     <motion.div
     animate={{ scale: this.zoom }}
     className={switchmode(mode())}
+    style={{padding: "25px"}}
     >
        
         {/* Values */}
         {data.map((row, i) => (
                 <div className={styles.row} key={i} style={{display: 'flex', alignItems: 'flex-end', justifyContent: 'center'}}>
-            {!isArray1D && (
-                    <div className={classes(styles.col, styles.index)}>
-                    <span className={styles.value}>{i}</span>
-                    </div>
-            )}
                 {row.filter((col) => col.variables.includes('p')).map((col)=><div style={{
             position: 'absolute', 
             width: '100%',
@@ -89,6 +85,8 @@ class Array1DRenderer extends Array2DRenderer {
             marginRight: '4px',
             zIndex: 1,
             bottom: `max(20px, ${this.toString(scaleY(col.value))}vh)`}}></div>)}
+
+
             {row.map((col) => (
             <motion.div
                 layout
@@ -123,8 +121,7 @@ class Array1DRenderer extends Array2DRenderer {
 
 <div>
         {/* Indexes */}
-        <div className={styles.row} style={{ display: 'flex', justifyContent: 'space-between' }}>
-        {!isArray1D && <td className={classes(styles.col, styles.index)} />}
+        <div className={styles.row} style={{display: 'flex', alignItems: 'flex-end', justifyContent: 'center'}}>
         {longestRow.map((_, i) => {
           // if the graph instance is heapsort, then the array index starts from 1
           if (algo === 'heapsort') {
@@ -141,9 +138,9 @@ class Array1DRenderer extends Array2DRenderer {
       
         {/* Variable pointers */}
         {data.map(
-          (row, i) => isArray1D && ( // variable pointer only working for 1D arrays
+          (row, i) => ( // variable pointer only working for 1D arrays
             <AnimateSharedLayout>
-                <div layout className={styles.row} key={i} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'start'}}>
+                <div layout className={styles.row} key={i} style={{display: 'flex', alignItems: 'flex-end', justifyContent: 'center'}}>
 
                 {row.map((col) => (
                     <div
@@ -167,6 +164,7 @@ class Array1DRenderer extends Array2DRenderer {
         )}
         </div>
     </motion.div>
+    </div>
     );
   }
 }
