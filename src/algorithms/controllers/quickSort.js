@@ -13,7 +13,7 @@ export default {
         order: 0,
       },
       graph: {
-        instance: new ArrayGraphTracer('graph', null, 'Graph'),
+        instance: new ArrayGraphTracer('graph', null, 'Recursion'),
         order: 1,
       },
     };
@@ -107,28 +107,30 @@ export default {
         [p, a] = partition(a, left, right);
         const leftArray = a.slice(left, p);
         const rightArray = a.slice(p + 1, right + 1);
+        const leftNodeType = "left";
+        const rightNodeType = "right";
+        var leftNode ="QuickSortFirstHalf(A, left="+left +", right=" + (p-1)+")";
+        var rightNode ="QuickSortSecondHalf(A, left="+(p+1) +", right=" + right+")";
 
-        chunker.add(3, (vis, pivot, arrayLen,_parentId,_left,_leftArray,_p,_a) => {
+        chunker.add(3, (vis, pivot, arrayLen,_parentId,_left,_leftArray,_p,_a, _leftNode, _leftNodeType) => {
           if (_leftArray.length !== 0) {
-            vis.graph.addNode(`${_left}/${_p - 1}`, _leftArray);
+            vis.graph.addNode(`${_left}/${_p - 1}`, _leftNode, _leftNodeType);
            vis.graph.addEdge(_parentId, `${_left}/${_p - 1}`);
           }
-          vis.graph.addNode(`p${_parentId}`, _a[_p]);
-         vis.graph.addEdge(_parentId, `p${_parentId}`);
           // fade out the part of the array that is not being sorted (i.e. right side)
           for (let i=pivot; i < arrayLen; i++){
             vis.array.fadeOut(i)
           } 
-        }, [p,right+1,parentId,left,leftArray,p,a]);
+        }, [p,right+1,parentId,left,leftArray,p,a,leftNode, leftNodeType]);
         QuickSort(a, left, p - 1, `${left}/${p - 1}`);
         
-        chunker.add(4, (vis, pivot, arrayLen,_a, _left, _p, _right, _parentId, _leftArray, _rightArray) => {
+        chunker.add(4, (vis, pivot, arrayLen,_a, _left, _p, _right, _parentId, _leftArray, _rightArray, _leftNode, _rightNode, _rightNodeType) => {
           //removing left node and edge
           vis.graph.removeEdge(_parentId, `${_left}/${_p - 1}`);
           vis.graph.removeNode(`${_left}/${_p - 1}`);
           
           if (_rightArray.length !== 0) {
-            vis.graph.addNode(`${_right}/${_p + 1}`, _rightArray);
+            vis.graph.addNode(`${_right}/${_p + 1}`, _rightNode, _rightNodeType);
             vis.graph.addEdge(_parentId, `${_right}/${_p + 1}`);
           }
           // fade out the part of the array that is not being sorted (i.e. left side)
@@ -139,19 +141,14 @@ export default {
           for (let i=pivot+1; i < arrayLen; i++){
             vis.array.fadeIn(i)
           } 
-        }, [p, right+1, a, left, p, right, parentId, leftArray, rightArray]);
+        }, [p, right+1, a, left, p, right, parentId, leftArray, rightArray, leftNode, rightNode, rightNodeType]);
         QuickSort(a, p + 1, right, `${right}/${p + 1}`);
 
-        chunker.add(49, (vis, _parentId, _right, _p) => {
+        chunker.add(49, (vis, _parentId, _right, _p, _rightNode) => {
            //removing right node, edge and pivot
            vis.graph.removeEdge(_parentId, `${_right}/${_p + 1}`);
            vis.graph.removeNode(`${_right}/${_p + 1}`);
-
-           vis.graph.removeEdge(_parentId, `p${_parentId}`);
-           vis.graph.removeNode(`p${_parentId}`);
-           
-
-        }, [parentId, right, p]);
+        }, [parentId, right, p, rightNode]);
 
       }
       // array of size 1, already sorted
@@ -163,25 +160,25 @@ export default {
      
       return a; // Facilitates testing
     }
-
+    var node ="QuickSort(A, left=0, right=" +nodes.length+")";
     chunker.add(
       1,
-      (vis, _nodes) => {
+      (vis, _nodes,_node) => {
         vis.array.set(_nodes, 'quicksort');
-        vis.graph.addNode(`0/${_nodes.length - 1}`, _nodes);
+        vis.graph.addNode(`0/${nodes.length - 1}`, _node,"root");
         vis.graph.layoutTree(`0/${_nodes.length - 1}`, false);
       },
-      [nodes],
+      [nodes, node],
     );
     
     const result = QuickSort(nodes, 0, nodes.length - 1, `0/${nodes.length - 1}`);
     // Fade out final node 
-    chunker.add(19, (vis, idx, _nodes) => {
+    chunker.add(19, (vis, idx, _nodes,_node) => {
       //vis.graph.removeNode(`0/${_nodes.length - 1}`);
-      vis.graph.updateNode(`0/${_nodes.length - 1}`, _nodes);
+      vis.graph.updateNode(`0/${_nodes.length - 1}`, _node);
       vis.array.fadeOut(idx);
       vis.array.clearVariables();;
-    }, [nodes.length - 1, nodes]);
+    }, [nodes.length - 1, nodes, node]);
     return result;
 
   },

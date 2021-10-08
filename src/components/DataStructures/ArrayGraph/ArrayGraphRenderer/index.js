@@ -112,6 +112,7 @@ class GraphRenderer extends Renderer {
       baseWidth * this.zoom,
       baseHeight * this.zoom,
     ];
+    var index = 0;
 
     return (
       <svg className={switchmode(mode())} viewBox={viewBox} ref={this.elementRef}>
@@ -165,7 +166,7 @@ class GraphRenderer extends Renderer {
         {
           nodes.map(node => {
             const { id, x, y, weight, visitedCount, selectedCount, value } = node;
-
+            index++;
             let arr = [];
             if (typeof value === 'object') {
               arr = Object.values(value);
@@ -175,16 +176,21 @@ class GraphRenderer extends Renderer {
             } else {
               arr.push(value);
             }
-
             const data = [];
             for (let i = 0; i < arr.length; i += 1) {
               const elem = new Element();
-              if (i === arr.length - 1 && arr[i] !== ' ') {
+              if (i === arr.length - 1 && arr[i] !== ' ' && arr.length>1) {
                 elem.selected = true;
               }
               elem.value = arr[i];
               data.push(elem);
+
+              if(nodes.length === index && nodes.length > 1) {
+                elem.selected = true;
+              }
             }
+
+            
 
             return (
               <g className={classes(styles.node, selectedCount && styles.selected, visitedCount && styles.visited)}

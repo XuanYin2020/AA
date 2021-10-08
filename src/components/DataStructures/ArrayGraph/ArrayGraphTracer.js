@@ -172,10 +172,10 @@ class ArrayGraphTracer extends Tracer {
     this.isWeighted = isWeighted;
   }
 
-  addNode(id, value = undefined, weight = null, x = 0, y = 0, visitedCount = 0, selectedCount = 0) {
+  addNode(id, value = undefined, nodeType = undefined, weight = null, x = 0, y = 0, visitedCount = 0, selectedCount = 0) {
     if (this.findNode(id)) return;
     value = (value === undefined ? id : value);
-    this.nodes.push({ id, value, weight, x, y, visitedCount, selectedCount });
+    this.nodes.push({ id, value, nodeType, weight, x, y, visitedCount, selectedCount });
     this.layout();
   }
 
@@ -308,20 +308,29 @@ class ArrayGraphTracer extends Tracer {
         if (marked[linkedNodeId]) continue;
         leafCounts[id] += recursiveAnalyze(linkedNodeId, depth + 1);
       }
-      if (leafCounts[id] === 0) leafCounts[id] = 1;
+      //if (leafCounts[id] === 0) leafCounts[id] = 1;
+      leafCounts[id] += 1;
       return leafCounts[id];
     };
     recursiveAnalyze(root, 0);
 
     // Calculates node's x and y.
     const hGap = rect.width / leafCounts[root];
-    const vGap = rect.height / maxDepth;
+   // const vGap = rect.height / maxDepth;
+   const vGap =70;
     marked = {};
     const recursivePosition = (node, h, v) => {
-      // console.log('h: ' + hGap);
-      // console.log("v: "+vGap)
       marked[node.id] = true;
-      node.x = rect.left + (h + leafCounts[node.id] / 2) * hGap - 0.5 * hGap;
+      //debugger;
+      var x1 = 0;
+      if(node.nodeType === "left"){
+          x1= -90;
+      }else if(node.nodeType === "right"){
+        x1= 90;
+      } 
+      
+      
+      node.x = rect.left + (h + leafCounts[node.id] / 2) * hGap - 0.5 * hGap +x1;
       node.y = rect.top + v * vGap;
       const linkedNodes = this.findLinkedNodes(node.id, false);
       if (sorted) linkedNodes.sort((a, b) => a.id - b.id);
