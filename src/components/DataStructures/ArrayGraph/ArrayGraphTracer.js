@@ -308,40 +308,43 @@ class ArrayGraphTracer extends Tracer {
         if (marked[linkedNodeId]) continue;
         leafCounts[id] += recursiveAnalyze(linkedNodeId, depth + 1);
       }
-      //if (leafCounts[id] === 0) leafCounts[id] = 1;
-      leafCounts[id] += 1;
+      if (leafCounts[id] === 0) leafCounts[id] = 1;
       return leafCounts[id];
     };
     recursiveAnalyze(root, 0);
 
     // Calculates node's x and y.
-    const hGap = rect.width / leafCounts[root];
-   // const vGap = rect.height / maxDepth;
-   const vGap =70;
+   // horizontal size allocated per leaf node under a subtree node
+   const leafNodeSizeAlloc = this.dimensions.baseWidth / this.nodes.length;
+   // vertical gap between nodes. incremented every level.
+   const verticalGap = (this.dimensions.baseHeight - 100) / maxDepth;
     marked = {};
-    const recursivePosition = (node, h, v) => {
+    const recursivePosition = (node, h, v, x, y) => {
       marked[node.id] = true;
-      //debugger;
-      var x1 = 0;
-      if(node.nodeType === "left"){
-          x1= -90;
-      }else if(node.nodeType === "right"){
-        x1= 90;
-      } 
+      node.x = x;
+      node.y = y;
       
-      
-      node.x = rect.left + (h + leafCounts[node.id] / 2) * hGap - 0.5 * hGap +x1;
-      node.y = rect.top + v * vGap;
       const linkedNodes = this.findLinkedNodes(node.id, false);
       if (sorted) linkedNodes.sort((a, b) => a.id - b.id);
       for (const linkedNode of linkedNodes) {
         if (marked[linkedNode.id]) continue;
-        recursivePosition(linkedNode, h, v + 1);
+        let x1 = x;
+        let y1 = y;
+         // For left child
+         if (linkedNode.nodeType === "left") {
+          x1 -= leafCounts[node.id] * leafNodeSizeAlloc;
+        }
+        // For right child
+        if (linkedNode.nodeType === "right") {
+          x1 += leafCounts[node.id] * leafNodeSizeAlloc;
+        }
+        y1 += verticalGap;
+        recursivePosition(linkedNode, h, v + 1, x1, y1);
         h += leafCounts[linkedNode.id];
       }
     };
     const rootNode = this.findNode(root);
-    recursivePosition(rootNode, 0, 0);
+    recursivePosition(rootNode, 0, 0, 0, rect.top);
   }
 
   layoutRandom() {
