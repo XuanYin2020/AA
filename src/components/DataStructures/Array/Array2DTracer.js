@@ -26,6 +26,7 @@ export class Element {
     this.sorted = false;
     this.key = key;
     this.variables = [];
+    this.customVal = '';
   }
 }
 

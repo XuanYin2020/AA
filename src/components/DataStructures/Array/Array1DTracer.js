@@ -103,6 +103,7 @@ class Array1DTracer extends Array2DTracer {
         newEl.sorted = val.sorted;
         newEl.faded = val.faded;
         newEl.variables = val.variables;
+        newEl.customVal = val.customVal;
         return newEl;
       }
     }
