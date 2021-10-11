@@ -90,7 +90,7 @@ class Array1DTracer extends Array2DTracer {
   }
 
   setCustomData(val) {
-    this.data.customVal = val;
+    this.customVal = val;
   }
 
   assignVariable(v, idx) {

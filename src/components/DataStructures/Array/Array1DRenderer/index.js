@@ -53,7 +53,8 @@ class Array1DRenderer extends Array2DRenderer {
   }
 
   renderData() {
-    const { data, algo } = this.props.data;
+    const { data, algo, customVal } = this.props.data;
+    console.log(data);
 
     const arrayMagnitudeScaleValue = 20; // value to scale an array e.g. so that the maximum item is 150px tall
 
@@ -150,7 +151,7 @@ class Array1DRenderer extends Array2DRenderer {
           ),
         )}
         </div>
-        {data.customVal}
+        {customVal}
     </motion.div>
     );
   }
