@@ -89,6 +89,10 @@ class Array1DTracer extends Array2DTracer {
     }
   }
 
+  setCustomData(val) {
+    this.data.customVal = val;
+  }
+
   assignVariable(v, idx) {
     // deep clone data so that changes to this.data are all made at the same time which will allow for tweening
     function customizer(val) {

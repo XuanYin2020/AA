@@ -150,6 +150,7 @@ export default {
       1,
       (vis, array) => {
         vis.array.set(array, 'quicksort');
+        vis.array.setCustomData('I am some custom data that should persist');
       },
       [nodes],
     );

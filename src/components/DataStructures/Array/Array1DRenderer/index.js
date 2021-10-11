@@ -150,6 +150,7 @@ class Array1DRenderer extends Array2DRenderer {
           ),
         )}
         </div>
+        {data.customVal}
     </motion.div>
     );
   }
