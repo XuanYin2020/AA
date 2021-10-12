@@ -19,7 +19,7 @@
 /* eslint-disable max-len */
 /* eslint-disable object-curly-newline */
 
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 // import Array1DRenderer from '../Array1DRenderer/index';
 import { motion, AnimateSharedLayout } from 'framer-motion';
 import Array2DRenderer, { } from '../Array2DRenderer/index';
@@ -51,6 +51,8 @@ class Array1DRenderer extends Array2DRenderer {
     this.togglePan(true);
     this.toggleZoom(true);
   }
+
+
 
   renderData() {
     const { data, algo, customVal } = this.props.data;
@@ -151,10 +153,36 @@ class Array1DRenderer extends Array2DRenderer {
           ),
         )}
         </div>
-        {customVal}
+        <div>{customVal != undefined ? `Max stack depth: ${customVal.length}` : ''}</div>
+        <div style={{}}>
+        {customVal != undefined ?
+        (() => {
+          try {
+            console.log(customVal.length)
+          } catch(err) {}
+          // let arr = [[0,0,0,0,0,0,0,0,1,0,1,1], [1,1,0,0]];
+          let newA = [];
+          for (let i=0;i<customVal.length;i++) {
+            newA.push(<div style={{display: 'flex', justifyContent: 'space-between'}}>{customVal[i].map(val => { return <div style={{width: `calc(100%/${data[0].length})`,marginTop: '8px', height: '8px', backgroundColor: v(val) }}></div>})
+          }</div>)
+          }
+          return newA;
+          }
+        )() : <div></div>}
+
+        </div>
     </motion.div>
     );
   }
 }
+
+function v(a) {
+  if(a == 0) {
+    return 'rgba(0,1,1,0)'
+  }
+  if(a==1) {return 'red'}
+  if(a==-1) {return 'black'};
+}
+
 
 export default Array1DRenderer;
