@@ -55,7 +55,7 @@ class Array1DRenderer extends Array2DRenderer {
 
 
   renderData() {
-    const { data, algo, customVal } = this.props.data;
+    const { data, algo, customVal, depth } = this.props.data;
     console.log(data);
 
     const arrayMagnitudeScaleValue = 20; // value to scale an array e.g. so that the maximum item is 150px tall
@@ -129,7 +129,7 @@ class Array1DRenderer extends Array2DRenderer {
         {data.map(
           (row, i) => ( // variable pointer only working for 1D arrays
             <AnimateSharedLayout>
-                <div layout className={styles.row} key={i} style={{display: 'flex', justifyContent: 'space-between', alignItems: 'start'}}>
+                <div layout className={styles.row} key={i} style={{minHeight: '50px', display: 'flex', justifyContent: 'space-between', alignItems: 'start'}}>
 
                 {row.map((col) => (
                     <div
@@ -141,7 +141,7 @@ class Array1DRenderer extends Array2DRenderer {
                         layoutId={v}
                         key={v}
                         className={styles.variable}
-                        style={{fontSize: v.length > 2 ? '12px' : null}}
+                        style={{fontSize: v.length > 2 ? '12px' : null, color: 'green'}}
                         >
                         {v}
                         </motion.div>
@@ -153,7 +153,7 @@ class Array1DRenderer extends Array2DRenderer {
           ),
         )}
         </div>
-        <div>{customVal != undefined ? `Max stack depth: ${customVal.length}` : ''}</div>
+        <p>{depth != undefined && customVal != undefined && customVal.length > 0 ? `Current stack depth: ${depth+1}` : ''}</p>
         <div style={{}}>
         {customVal != undefined ?
         (() => {
@@ -163,8 +163,17 @@ class Array1DRenderer extends Array2DRenderer {
           // let arr = [[0,0,0,0,0,0,0,0,1,0,1,1], [1,1,0,0]];
           let newA = [];
           for (let i=0;i<customVal.length;i++) {
-            newA.push(<div style={{display: 'flex', justifyContent: 'space-between'}}>{customVal[i].map(val => { return <div style={{width: `calc(100%/${data[0].length})`,marginTop: '8px', height: '8px', backgroundColor: v(val) }}></div>})
-          }</div>)
+            newA.push(<div style={{display: 'flex',
+             justifyContent: 'space-between',
+            margin: 'auto'}}>{customVal[i].map(val => { 
+              return <div style={{
+                transitionDuration: '0.1s',
+                width: `calc(100%/${data[0].length})`,
+                marginTop: '8px',
+                height: '6px',
+                backgroundColor: v(val) }}></div>})
+          }
+          </div>)
           }
           return newA;
           }
@@ -181,7 +190,8 @@ function v(a) {
     return 'rgba(0,1,1,0)'
   }
   if(a==1) {return 'red'}
-  if(a==-1) {return 'black'};
+  if(a==-1) {return 'rgba(0,0,0,0.2)'};
+  if(a==-2) {return 'pink'}
 }
 
 

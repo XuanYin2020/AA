@@ -93,6 +93,10 @@ class Array1DTracer extends Array2DTracer {
     this.customVal = val;
   }
 
+  setDepth(depth) {
+    this.depth = depth;
+  }
+
   assignVariable(v, idx) {
     // deep clone data so that changes to this.data are all made at the same time which will allow for tweening
     function customizer(val) {
@@ -104,6 +108,7 @@ class Array1DTracer extends Array2DTracer {
         newEl.faded = val.faded;
         newEl.variables = val.variables;
         newEl.customVal = val.customVal;
+        newEl.depth = val.depth;
         return newEl;
       }
     }

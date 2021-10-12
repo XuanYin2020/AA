@@ -136,6 +136,7 @@ export default {
 
         
         vis.array.setCustomData(c);
+        vis.array.setDepth(depth);
 
         // let newB = setState(newA, depth, 1, left, right-1);
 
@@ -202,6 +203,9 @@ export default {
     // Fade out final node
     chunker.add(19, (vis, idx) => {
       vis.array.fadeOut(idx);
+      for(let i=0;i<nodes.length;i++) {
+        vis.array.fadeIn(i);
+      }
       vis.array.clearVariables();
       vis.array.setCustomData([])
     }, [nodes.length - 1]);
