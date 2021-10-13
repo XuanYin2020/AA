@@ -129,6 +129,7 @@ export default {
         let c = setState(newB, depth, 1, left, right);
         for(let i=0;i<c.length;i++) {
           for(let j=0;j<c[i].length;j++) {
+            if(c[i][j]==0) continue;
             if(i !== depth && c[i][j] != 0 && (j <left || j > right)) {c[i][j] = -1}
             if(i !== depth && (j >=left && j <= right)) {c[i][j] = 0}
           }
@@ -146,6 +147,7 @@ export default {
         [p, a] = partition(a, left, right);
 
         chunker.add(3, (vis, pivot, arrayLen) => {
+          vis.array.customVal[depth][p] = 0;
           // fade out the part of the array that is not being sorted (i.e. right side)
           for (let i = pivot; i < arrayLen; i++) {
             vis.array.fadeOut(i);
@@ -154,6 +156,7 @@ export default {
         QuickSort(a, left, p - 1, `${left}/${p - 1}`, depth+1);
 
         chunker.add(4, (vis, pivot, arrayLen) => {
+          vis.array.setDepth(depth);
           // fade out the part of the array that is not being sorted (i.e. left side)
           for (let i = 0; i <= pivot; i++) {
             vis.array.fadeOut(i);

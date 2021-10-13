@@ -141,7 +141,7 @@ class Array1DRenderer extends Array2DRenderer {
                         layoutId={v}
                         key={v}
                         className={styles.variable}
-                        style={{fontSize: v.length > 2 ? '12px' : null, color: 'green'}}
+                        style={{ fontSize: v.length > 2 ? '12px' : null, color: 'green'}}
                         >
                         {v}
                         </motion.div>
@@ -153,7 +153,7 @@ class Array1DRenderer extends Array2DRenderer {
           ),
         )}
         </div>
-        <p>{depth != undefined && customVal != undefined && customVal.length > 0 ? `Current stack depth: ${depth+1}` : ''}</p>
+        <p style={{fontSize: '14px', color: 'grey'}}>{depth != undefined && customVal != undefined && customVal.length > 0 ? `Current stack depth: ${depth+1}` : ''}</p>
         <div style={{}}>
         {customVal != undefined ?
         (() => {
