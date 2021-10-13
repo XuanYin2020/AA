@@ -39,7 +39,7 @@
 
             .variable {
                 font-size: 18px;
-                color: var(--array-1d-row-col-sorted);
+                color: var(--array-1d-row-col-variable);
             }
 
             &.selected {
@@ -87,7 +87,7 @@
                 background-color: var(--array-2d-row-bg-sorted);
 
                 span {
-                    color: #FFFFFF;
+                    color: var(--array-2d-row-col-sorted);
                 }
             }
 
