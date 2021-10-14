@@ -157,10 +157,6 @@ class Array1DRenderer extends Array2DRenderer {
         <div style={{}}>
         {customVal != undefined ?
         (() => {
-          try {
-            console.log(customVal.length)
-          } catch(err) {}
-          // let arr = [[0,0,0,0,0,0,0,0,1,0,1,1], [1,1,0,0]];
           let newA = [];
           for (let i=0;i<customVal.length;i++) {
             newA.push(<div style={{display: 'flex',

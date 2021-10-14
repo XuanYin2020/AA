@@ -1,7 +1,6 @@
 import { QSExp } from '../explanations';
 // import 1D tracer to generate array in a separate component of the middle panel
 import ArrayTracer from '../../components/DataStructures/Array/Array1DTracer';
-import { array } from 'prop-types';
 
 export default {
   explanation: QSExp,
@@ -206,11 +205,12 @@ export default {
     // Fade out final node
     chunker.add(19, (vis, idx) => {
       vis.array.fadeOut(idx);
-      for(let i=0;i<nodes.length;i++) {
+      // fade back in all nodes for final sorted state
+      for (let i = 0; i < nodes.length; i += 1) {
         vis.array.fadeIn(i);
       }
       vis.array.clearVariables();
-      vis.array.setCustomData([])
+      vis.array.setCustomData([]);
     }, [nodes.length - 1]);
     return result;
   },
