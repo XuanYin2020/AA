@@ -54,11 +54,10 @@ class Array1DRenderer extends Array2DRenderer {
 
   renderData() {
     const { data, algo } = this.props.data;
-
     const arrayMagnitudeScaleValue = 17; // value to scale an array e.g. so that the maximum item is 150px tall
 
-    let longestRow = data.reduce((longestRow, row) => longestRow.length < row.length ? row : longestRow, []);
 
+    let longestRow = data.reduce((longestRow, row) => longestRow.length < row.length ? row : longestRow, []);
     let largestColumnValue = data[0].reduce((acc, curr) => (acc < curr.value ? curr.value : acc), 0);
     let scaleY = ((largest, columnValue) => columnValue / largest * arrayMagnitudeScaleValue).bind(null, largestColumnValue);
     if (!this.props.data.arrayItemMagnitudes) {
@@ -71,22 +70,12 @@ class Array1DRenderer extends Array2DRenderer {
     className={switchmode(mode())}
     style={{padding: "25px"}}
     >
-       
+
         {/* Values */}
         {data.map((row, i) => (
-                <div className={styles.row} key={i} style={{display: 'flex', alignItems: 'flex-end', justifyContent: 'center'}}>
-                {row.filter((col) => col.variables.includes('p')).map((col)=><div style={{
-            position: 'absolute', 
-            width: '100%',
-            backgroundColor: 
-            'orange',
-            opacity: 0.4,
-            height: '3px',
-            marginRight: '4px',
-            zIndex: 1,
-            bottom: `max(20px, ${this.toString(scaleY(col.value))}vh)`}}></div>)}
-
-
+                <div className={styles.row} key={i} style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
+                {row.filter((col) => col.variables.includes('pivot')).map((col)=><div className={styles.pivotLine} style={{
+                bottom: `max(var(--array-1d-minimum-height), ${this.toString(scaleY(col.value))}vh)`}}/>)}
             {row.map((col) => (
             <motion.div
                 layout
@@ -122,6 +111,7 @@ class Array1DRenderer extends Array2DRenderer {
 <div>
         {/* Indexes */}
         <div className={styles.row} style={{display: 'flex', alignItems: 'flex-end', justifyContent: 'center'}}>
+
         {longestRow.map((_, i) => {
           // if the graph instance is heapsort, then the array index starts from 1
           if (algo === 'heapsort') {
@@ -135,7 +125,6 @@ class Array1DRenderer extends Array2DRenderer {
         })}
         </div>
 
-      
         {/* Variable pointers */}
         {data.map(
           (row, i) => ( // variable pointer only working for 1D arrays
@@ -152,6 +141,7 @@ class Array1DRenderer extends Array2DRenderer {
                         layoutId={v}
                         key={v}
                         className={styles.variable}
+                        style={{fontSize: v.length > 2 ? '12px' : null}}
                         >
                         {v}
                         </motion.div>

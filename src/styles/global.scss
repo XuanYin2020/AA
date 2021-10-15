@@ -127,7 +127,8 @@ $yellowLine: #FFDE3C;
 	--graph-node-circle-fill-selected: #2289ff;
 	--graph-node-circle-stroke-selected: #2289ff;
 	--graph-node-id-fill-selected: #FFFFFF;
-	--graph-node-id-fill-sorted: #2289ff;
+	--graph-node-circle-fill-sorted: #aeaeae;
+	--graph-node-id-fill-sorted: #FFFFFF;
 	--graph-node-circle-fill-visited: #ee0970;
 	--graph-node-circle-stroke-visited: #ee0970;
 	--graph-node-id-fill-visited: #FFFFFF;
@@ -160,8 +161,8 @@ $yellowLine: #FFDE3C;
 	--array-2d-row-col-bg-index: none;
 	--array-2d-row-col-border-index: none;
 	--array-2d-row-col-color-index: #505050;
-	--array-2d-row-bg-sorted: #ffffff;
-	--array-2d-row-col-sorted: #2289ff;
+	--array-2d-row-bg-sorted: #aeaeae;
+	--array-2d-row-col-sorted: #FFFFFF;
 
 	--array-graph-row-col-bg: #ffffff;
 	--array-graph-row-col-border: #4f4f4f;
@@ -341,8 +342,8 @@ $yellowLine: #FFDE3C;
 	--array-2d-row-col-bg-index: none;
 	--array-2d-row-col-border-index: none;
 	--array-2d-row-col-color-index: #505050;
-	--array-2d-row-bg-sorted: #343434;
-	--array-2d-row-col-sorted: #2289ff;
+	--array-2d-row-bg-sorted: #aeaeae;
+	--array-2d-row-col-sorted: #FFFFFF;
 
 	--array-graph-row-col-bg: #343434;
 	--array-graph-row-col-border: #212121;
@@ -370,10 +371,10 @@ $yellowLine: #FFDE3C;
 }
 
 [algo-theme="default"] {
-	--graph-node-circle-fill-selected: #ee0970;
-	--graph-node-circle-stroke-selected: #ee0970;
-	--graph-node-circle-fill-visited: #2289ff;
-	--graph-node-circle-stroke-visited: #2289ff;
+	--graph-node-circle-fill-selected: #83d489;
+	--graph-node-circle-stroke-selected: #83d489;
+	--graph-node-circle-fill-visited: #e85c49;
+	--graph-node-circle-stroke-visited: #e85c49;
 	--graph-node-circle-fill-visited1: #11cc77;
 	--graph-node-circle-stroke-visited1: #11cc77;
 	--graph-node-circle-fill-visited2: #f58b2f;
@@ -394,12 +395,16 @@ $yellowLine: #FFDE3C;
 	--graph-arrow-fill-visited1: #11cc77;
 	--graph-arrow-fill-visited2: #f58b2f;
 
+	--array-1d-row-col-bg-selected: #e85c49;
+	--array-1d-row-col-bg-patched: #83d489;
+	--array-1d-row-col-variable: #e85c49;
+
 	--array-2d-row-col-bg-selected: #2289ff;
 	--array-2d-row-col-bg-selected1: #11cc77;
 	--array-2d-row-col-bg-selected2: #8ac0ff;
 	--array-2d-row-col-bg-selected3: #8fdbb9;
 	--array-2d-row-col-bg-patched: #f58b2f;
-	--array-2d-row-col-sorted: #2289ff;
+	--array-2d-row-col-sorted: #FFFFFF;
 
 
 	--array-graph-row-col-bg-selected: #2289ff;
@@ -423,10 +428,10 @@ $yellowLine: #FFDE3C;
 
 // Override Algorithm Theme Colors [Green]
 [algo-theme="green"] {
-	--graph-node-circle-fill-selected: #e42fd5;
-	--graph-node-circle-stroke-selected: #e42fd5;
-	--graph-node-circle-fill-visited: #059847;
-	--graph-node-circle-stroke-visited: #059847;
+	--graph-node-circle-fill-selected: #258bff;
+	--graph-node-circle-stroke-selected: #258bff;
+	--graph-node-circle-fill-visited: #ec0a70;
+	--graph-node-circle-stroke-visited: #ec0a70;
 
 	--graph-edge-line-stroke-selected: #e42fd5;
 	--graph-edge-weight-fill-selected: #e42fd5;
@@ -436,12 +441,16 @@ $yellowLine: #FFDE3C;
 	--graph-arrow-fill-selected: #e42fd5;
 	--graph-arrow-fill-visited: #059847;
 
+	--array-1d-row-col-bg-selected: #ec0a70;
+	--array-1d-row-col-bg-patched: #258bff;
+	--array-1d-row-col-variable: #ec0a70;
+
 	--array-2d-row-col-bg-selected: #059847;
 	--array-2d-row-col-bg-selected1: #11cc77;
 	--array-2d-row-col-bg-selected2: #8ac0ff;
 	--array-2d-row-col-bg-selected3: #8fdbb9;
 	--array-2d-row-col-bg-patched: #f58b2f;
-	--array-2d-row-col-sorted: #059847;
+	--array-2d-row-col-sorted: #ffffff;
 
 
 	--array-graph-row-col-bg-selected: #059847;
@@ -474,12 +483,16 @@ $yellowLine: #FFDE3C;
 	--graph-arrow-fill-selected: #9f2fe4;
 	--graph-arrow-fill-visited: #0d9eae;
 
+	--array-1d-row-col-bg-selected: #0d9eae;
+	--array-1d-row-col-bg-patched: #9f2fe4;
+	--array-1d-row-col-variable: #0d9eae;
+
 	--array-2d-row-col-bg-selected: #0d9eae;
 	--array-2d-row-col-bg-selected1: #11cc77;
 	--array-2d-row-col-bg-selected2: #8ac0ff;
 	--array-2d-row-col-bg-selected3: #8fdbb9;
 	--array-2d-row-col-bg-patched: #f58b2f;
-	--array-2d-row-col-sorted: #0d9eae;
+	--array-2d-row-col-sorted: #ffffff;
 
 
 	--array-graph-row-col-bg-selected: #0d9eae;
@@ -538,10 +551,10 @@ $yellowLine: #FFDE3C;
 }
 
 @mixin calc($property, $expression...) {
-  #{$property}: -moz-calc(#{$expression});
-  #{$property}: -o-calc(#{$expression});
-  #{$property}: -webkit-calc(#{$expression});
-  #{$property}: calc(#{$expression});
+	#{$property}: -moz-calc(#{$expression});
+	#{$property}: -o-calc(#{$expression});
+	#{$property}: -webkit-calc(#{$expression});
+	#{$property}: calc(#{$expression});
 }
 
 
@@ -565,6 +578,6 @@ $yellowLine: #FFDE3C;
 
 @mixin preventWrap {
 	white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+	overflow: hidden;
+	text-overflow: ellipsis;
 }
