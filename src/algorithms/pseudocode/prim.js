@@ -10,27 +10,18 @@ Main
 Prim(E, n) // Given a weighted connected graph G with nodes 1..n and edges E,  \\B 1
            // find a minimum spanning tree for G.
 \\In{
-    for i <- 1 to n                                             
-    \\In{
-        Cost[i] <- Infinity                                     
-        Prev[i] <- Null
-        \\Expl{  The array Prev will be used to track how nodes are 
-                connected into the resulting spanning tree. 
-                Whenever an edge (j,i) is added to the tree, this 
-                is captured by setting Prev[i] to j.
-        \\Expl}
-    \\In}
+    Q <- InitPriorityQueue(n) \\B 2
+    \\Expl{  Nodes are arranged in the priority queue Q according 
+            to cost. Smaller cost means higher priority.
+    \\Expl}
+    initilisation details       \\Ref Initialise
     Cost[1] <- 0
     \\Expl{  We arrange for the tree construction to start with
             node 1; this is achieved by setting the cost of node
             1 to 0 (to get from node 1 to itself costs nothing).
             Other nodes initially assigned the largest possible 
             cost, Infinity, as they have not been considered yet.
-    \\Expl}
-    Q <- InitPriorityQueue(n) \\B 2
-    \\Expl{  Nodes are arranged in the priority queue Q according 
-            to cost. Smaller cost means higher priority.
-    \\Expl}
+    \\Expl}  
     while Q not Empty \\B 3
     \\In{
         i <- RemoveMin(Q)  // i is now part of the spanning tree \\B 4
@@ -45,6 +36,20 @@ Prim(E, n) // Given a weighted connected graph G with nodes 1..n and edges E,  \
         update priority queue Q    \\Ref Update
     \\In}
 \\In}
+\\Code}
+
+\\Code{
+Initialise
+        for i <- 1 to n                                             
+        \\In{
+        Cost[i] <- Infinity                                     
+        Prev[i] <- Null
+        \\Expl{  The array Prev will be used to track how nodes are 
+                connected into the resulting spanning tree. 
+                Whenever an edge (j,i) is added to the tree, this 
+                is captured by setting Prev[i] to j.
+        \\Expl}
+        \\In}      
 \\Code}
 
 \\Code{
